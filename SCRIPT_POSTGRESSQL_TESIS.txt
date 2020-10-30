@@ -1,0 +1,107 @@
+CREATE TABLE "ALUMNO"
+(
+    "id" serial NOT NULL,
+    "nombre" text NOT NULL,
+    "apellido" text NOT NULL,
+    "dni" char(8) NOT NULL,
+    "fecha_nacimiento" date NOT NULL,
+    "direccion" text NOT NULL,
+    "codigo" char(10) NOT NULL,
+    "correo" text NOT NULL,
+    "contraseña" text NOT NULL,
+    "estado" char(1) NOT NULL,
+    CONSTRAINT "PK_alumno" PRIMARY KEY ( "id" )
+);
+
+CREATE TABLE "DOCENTE"
+(
+    "id" serial NOT NULL,
+    "nombre" text NOT NULL,
+    "apellido" text NOT NULL,
+    "dni" char(8) NOT NULL,
+    "fecha_nacimiento" date NOT NULL,
+    "direccion" text NOT NULL,
+    "codigo" char(10) NOT NULL,
+    "correo" text NOT NULL,
+    "contraseña" text NOT NULL,
+    "estado" char(1) NOT NULL,
+    CONSTRAINT "PK_docente" PRIMARY KEY ( "id" )
+);
+
+
+CREATE TABLE "TESIS"
+(
+    "id" serial NOT NULL,
+    "titulo" text NOT NULL,
+    "tema" text NOT NULL,
+    "fecha" date NOT NULL,
+    "estado" Boolean NOT NULL,
+    "id_Asesor" integer NOT NULL,
+    "id_Alumno" integer NOT NULL,
+    CONSTRAINT "PK_tesis" PRIMARY KEY ( "id" ),   
+    CONSTRAINT "FK_63" FOREIGN KEY ( "id_Alumno" ) REFERENCES "ALUMNO" ( "id" ),
+    CONSTRAINT "FK_64" FOREIGN KEY ( "id_Asesor" ) REFERENCES "DOCENTE" ( "id" )
+);
+
+CREATE TABLE "DOCUMENTO"
+(
+    "id" serial NOT NULL,
+    "nombre" text NOT NULL,
+    "descripcion" text NULL,
+    "url" text NOT NULL,
+    "id_Tesis" integer NOT NULL,
+    CONSTRAINT "PK_documento" PRIMARY KEY ( "id" ),
+    CONSTRAINT "FK_55" FOREIGN KEY ( "id_Tesis" ) REFERENCES "TESIS" ( "id" )
+);
+
+CREATE TABLE "AMBIENTE"
+(
+    "id" serial NOT NULL,
+    "nombre" text NOT NULL,
+    "descripcion" text NOT NULL,
+    "estado" char(1) NOT NULL,
+    CONSTRAINT "PK_ambiente" PRIMARY KEY ( "id" )
+);
+
+CREATE TABLE "HORARIO"
+(
+    "id" serial NOT NULL,
+    "fecha_inicio" date NOT NULL,
+    "fecha_fin" date NOT NULL,
+	"hora_inicio" time NOT NULL,
+    "hora_fin" time NOT NULL,    
+    "estado" Boolean NOT NULL,
+    "id_Ambiente" integer NOT NULL,
+    CONSTRAINT "PK_horario" PRIMARY KEY ( "id" ),
+    CONSTRAINT "FK_92" FOREIGN KEY ( "id_Ambiente" ) REFERENCES "AMBIENTE" ( "id" )
+);
+
+CREATE TABLE "ASESORIA"
+(
+    "id" serial NOT NULL,
+    "observacion" varchar(100) NULL,    
+    "id_Tesis" integer NOT NULL,
+    "id_Horario" integer NOT NULL,
+    CONSTRAINT "PK_asesoria" PRIMARY KEY ( "id" ),
+    CONSTRAINT "FK_101" FOREIGN KEY ( "id_Horario" ) REFERENCES "HORARIO" ( "id" ),
+    CONSTRAINT "FK_98" FOREIGN KEY ( "id_Tesis" ) REFERENCES "TESIS" ( "id" )
+);
+
+CREATE TABLE "SUSTENTACION"
+(
+    "id" serial PRIMARY KEY,
+	"id_Horario" int not null,
+	"id_Tesis" int not null,
+	"estado" char(1) NOT NULL,
+	CONSTRAINT "FK_102" FOREIGN KEY ( "id_Horario" ) REFERENCES "HORARIO" ( "id" ),
+	CONSTRAINT "FK_103" FOREIGN KEY ( "id_Tesis" ) REFERENCES "TESIS" ( "id" )
+);
+
+CREATE TABLE "SUSTENTACION_JURADO"
+(
+	"id" serial PRIMARY KEY,
+	"id_Jurado" int NOT NULL,
+	"id_Sustentacion" int NOT NULL,
+	CONSTRAINT "FK_104" FOREIGN KEY ( "id_Jurado" ) REFERENCES "DOCENTE" ( "id" ),
+	CONSTRAINT "FK_105" FOREIGN KEY ( "id_Sustentacion" ) REFERENCES "SUSTENTACION" ( "id" )
+)
